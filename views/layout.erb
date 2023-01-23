@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <title>Expense Tracker</title>
+    <meta charset="utf-8">      
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet"> 
+  </head>
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li>Signed in as: tfrye42</li>
+          <li><a href="#">Sign Out</a></li>
+        </ul>
+      </nav>
+      <h1><%= yield_content :header_text %></h1>
+      <a href="/expenses" class="home-link">Home</a>
+    </header>
+    <main>
+      <% if session[:error] %>
+      <div class="flash error">
+        <p><%= session.delete(:error) %></p>
+      </div>
+      <% end %>
+
+      <% if session[:success] %>
+      <div class="flash success">
+        <p><%= session.delete(:success) %></p>
+      </div>
+      <% end %>
+
+      <%== yield %>
+    </main>
+    <footer>
+      
+    </footer>
+  </body>
+</html>

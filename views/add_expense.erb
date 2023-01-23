@@ -1,0 +1,23 @@
+<% content_for :header_text do %>
+  Add An Expense
+<% end %>
+
+<form action="#" method="post" id="add-expense-form">
+  <label for="memo">Memo:</label>
+  <input type="text" name="memo" id="memo" value="<%= params[:memo] %>" placeholder='Your purchase' required>
+
+  <label for="amount">Amount:</label>
+  <input type="number" name="amount" id="amount" step="0.01" min="0.01" max="9999.99" value="<%= params[:amount].to_f %>" placeholder="0.00" required>
+  <br>
+  <label for="category">Category:</label>
+  <select name="category" required>
+    <% @categories_list.each do |category| %>
+      <option><%= category %></option>
+    <% end %>
+  </select>
+
+  <label for="date" id="transaction-date">Transaction Date:</label>
+  <input type="date" name="date" value="2023-01-22" id="transaction-date-input" required>
+
+  <button type="submit" class="add-expense">Add Expense</button>
+</form>

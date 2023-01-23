@@ -1,0 +1,267 @@
+@import url("whitespace-reset.css");
+
+body {
+  background-color: #dedede;
+  width: 100%;
+  font-family: 'Questrial', sans-serif;
+}
+
+header {
+  text-align: left;
+  padding: 50px 0 0 150px;
+  margin: 0 auto;*/
+}
+
+main {
+  margin-top: 50px;
+}
+
+header ul {
+  text-align: right;
+  margin-right: 50px;
+}
+
+header li {
+  display: inline;
+  text-align: right;
+  margin-left: 20px;
+}
+
+h1 {
+  font-size: 1.5rem;
+}
+
+.home-link {
+  text-decoration: none;
+  color: #000000;
+}
+
+form {
+  text-align: center;
+  margin: 0 auto;
+}
+
+form#add-expense-form {
+  text-align: left;
+  width: 27%;
+  line-height: 40px;
+  border: 1px solid #808080;
+  padding: 25px;
+}
+
+form#add-expense-form #term {
+   margin-left: 22px;
+}
+
+form#add-expense-form #transaction-date {
+  margin-left: 34px;
+}
+
+form#add-expense-form #transaction-date-input {
+  width: 7rem;
+}
+
+form#sign-in-form {
+  text-align: left;
+  width: 15%;
+  line-height: 40px;
+  padding: 25px;
+  text-align: center;
+}
+
+form#sign-in-form input {
+  width: 40%;
+}
+
+form#sign-in-form #password {
+  margin-left: 4px;
+}
+
+label {
+  margin: 0 5px;
+}
+
+
+input, button, select {
+  border-radius: 3px;
+  border: 1px solid #737373;
+  padding: 4px 10px;
+}
+
+input, select {  
+  background-color: #ffffff;
+}
+
+input[type=date] {
+  font-family: 'Questrial', sans-serif;
+  padding: 5px;
+  position: relative;
+  top: -1px;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+  width: 6.4rem;
+}
+
+.search {
+  margin-left: 30px;
+}
+
+.add-expense {
+  position: relative;
+  float: right;
+  margin: 10px 9px;
+}
+
+.sign-in {
+  position: relative;
+  float: right;
+  margin: 10px 30px;
+}
+
+#add-expense-form::after,
+#sign-in-form::after {
+  clear: both;
+  content: "";
+  display: block;
+}
+
+main nav {
+  padding-left: 25%;
+  margin: .7rem 0;
+}
+
+nav a {
+  text-decoration: none;
+  color: #000000;
+}
+
+table, tr, th, td {
+  border-collapse: collapse;
+  border:1px solid #000000;
+  margin: 0 auto;
+}
+
+table {
+  table-layout: fixed;
+  width: 50%;
+}
+
+th {
+  box-sizing: border-box;
+  padding: 5px 0;
+  font-size: 1.2rem;
+  width: 10%;
+}
+
+th a {
+  text-decoration: none;
+  color: #000000;
+}
+
+th p {
+  display: inline-block;
+}
+
+th p.sort-icon {
+  font-size: .7rem;
+  position: relative;
+  top: -2px;
+}
+
+th.memo {
+  width: 20%;
+}
+
+th.actions {
+  width: 5%;
+  border: none;
+}
+
+td {
+  padding: 4px 5px;
+}
+
+td.actions {
+  text-align: center;  
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-around;
+  border: none;
+  padding: 3px 12px 0;
+}
+
+td.actions img {  
+  width: 20px;
+  height: 20px;
+/*  border: 1px solid black;*/
+}
+
+.memo {
+  background-color: #cccccc;
+}
+
+.delete {
+  border: none;
+  background-color: #dedede;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+
+.centered {
+  text-align: center;
+}
+
+.rjust, .withdrawal {
+  text-align: right;
+}
+
+.deposit {
+  text-align: left;
+}
+
+.sub-100 {
+  background-color: #fe8019;
+}
+
+.negative {
+  background-color: #fb4934;
+  font-weight: bold;
+}
+
+.deposit {
+  background-color: #8ec07c;
+}
+
+.flash {
+  max-width: 960px;
+  padding: 10px 20px;
+  margin: 20px auto 1.5em auto;
+  color: #3399cc;
+  background: #CBE5F2; 
+}
+
+.flash p {
+  font-size: 14px;
+  font-weight: bold; 
+}
+
+.flash.error {
+  color: #ff6633;
+  background: #FFCFBF; 
+}
+
+.flash.success {
+  color: #33cc99;
+  background: #CBF2E5; 
+}

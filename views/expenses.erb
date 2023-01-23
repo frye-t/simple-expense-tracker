@@ -1,0 +1,62 @@
+<% content_for :header_text do %>
+  Tyler's Expenses
+<% end %>
+
+<form action="#" method="post" id="search-form">
+  <label for="name">Search for:</label>
+  <input type="text" name="term">
+
+  <label for="start_date">Between:</label>
+  <input type="date" name="start_date" value="2022-01-01">
+
+  <label for="end_date">And:</label>
+  <input type="date" name="start_date" value="2023-01-22">
+
+  <button type="submit" class="search">Search</button>
+</form>
+
+<nav>
+  <ul>
+    <li><a href="/add-expense">Add Expense</a></li>
+  </ul>
+</nav>
+
+<table>        
+  <tr>
+    <th class="memo">
+      <a href="#">Memo</a>
+    </th>
+    <th>
+      <a href="#">Date</a>
+    </th>
+    <th>
+      <a href="#">Category</a>
+    </th>
+    <th>
+      <a href="#">Amount</a>
+    </th>
+    <th>
+      <a href="#">Balance</a>
+    </th>
+    <th class="actions"></th>
+  </tr>
+
+  <% @expenses.each do |expense| %>
+    <tr>
+    <td class="memo"><%= expense.memo %></td>
+    <td><%= expense.date %></td>
+    <td class="centered"><%= expense.category %></td>
+    <td class="<%= amount_class(expense) %>"><%= expense.amount %></td>
+    <td class="rjust <%= balance_class(expense) %>"><%= expense.balance %></td>
+    <td class="actions">
+      <a href="/edit-expense/<%= expense.id %>"><img src="./images/icons8-edit-24.png"></a>
+      <form action="/delete-expense/<%= expense.id %>" method="post" class="delete">
+        <button type="submit" class="delete">
+          <img src="./images/icons8-remove-30.png">
+        </button>
+        <input type="hidden" name="memo" value="<%= expense.memo %>">
+      </form>
+    </td>
+  </tr>
+  <% end %>
+</table>
