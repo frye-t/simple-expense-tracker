@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <title>Expense Tracker</title>
+    <meta charset="utf-8">      
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet"> 
+  </head>
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li>Signed in as: tfrye42</li>
+          <li><a href="#">Sign Out</a></li>
+        </ul>
+      </nav>
+      <h1>Tyler's Expenses</h1>
+      <a href="index.html" class="home-link">Home</a>
+    </header>
+    <main>
+      <form action="#" method="post" id="search-form">
+        <label for="name">Search for:</label>
+        <input type="text" name="term">
+
+        <label for="start_date">Between:</label>
+        <input type="date" name="start_date" value="2022-01-01">
+
+        <label for="end_date">And:</label>
+        <input type="date" name="start_date" value="2023-01-22">
+
+        <button type="submit" class="search">Search</button>
+      </form>
+
+      <nav>
+        <ul>
+          <li><a href="add-expense.html">Add Expense</a></li>
+        </ul>
+      </nav>
+
+      <table>        
+        <tr>
+          <th class="memo">
+            <a href="#">Memo</a>
+          </th>
+          <th>
+            <a href="#">Date</a>
+            <p class="sort-icon">&#9660</p>
+          </th>
+          <th>
+            <a href="#">Category</a>
+          </th>
+          <th>
+            <a href="#">Amount</a>
+          </th>
+          <th>
+            <a href="#">Balance</a>
+          </th>
+          <th class="actions"></th>
+        </tr>
+
+        <tr>
+          <td class="memo">Netflix</td>
+          <td>12/13/22</td>
+          <td class="centered">Recreation</td>
+          <td class="withdrawal">$7.99</td>
+          <td class="rjust">$492.01</td>
+          <td class="actions">
+            <a href="#"><img src="icons8-edit-24.png"></a>
+            <form action="#" method="post" class="delete">
+              <button type="submit" class="delete">
+                <img src="icons8-remove-30.png">
+              </button>
+            </form>
+          </td>
+        </tr>
+
+         <tr>
+          <td class="memo">Groceries</td>
+          <td>12/18/22</td>
+          <td class="centered">Food</td>
+          <td class="withdrawal">$86.32</td>
+          <td class="rjust">$405.69</td>
+          <td class="actions">
+            <a href="#"><img src="icons8-edit-24.png"></a>
+            <form action="#" method="post" class="delete">
+              <button type="submit" class="delete">
+                <img src="icons8-remove-30.png">
+              </button>
+            </form>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="memo">Rent</td>
+          <td>01/01/23</td>
+          <td class="centered">Housing</td>
+          <td class="withdrawal">$250.00</td>
+          <td class="rjust">$155.69</td>
+          <td class="actions">
+            <a href="#"><img src="icons8-edit-24.png"></a>
+            <form action="#" method="post" class="delete">
+              <button type="submit" class="delete">
+                <img src="icons8-remove-30.png">
+              </button>
+            </form>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="memo">Gas</td>
+          <td>01/04/23</td>
+          <td class="centered">Utilities</td>
+          <td class="withdrawal">$100.00</td>
+          <td class="rjust sub-100">$55.69</td>
+          <td class="actions">
+            <a href="#"><img src="icons8-edit-24.png"></a>
+            <form action="#" method="post" class="delete">
+              <button type="submit" class="delete">
+                <img src="icons8-remove-30.png">
+              </button>
+            </form>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="memo">Electric</td>
+          <td>01/05/23</td>
+          <td class="centered">Utilities</td>
+          <td class="withdrawal">$100.00</td>
+          <td class="rjust negative">-$44.31</td>
+          <td class="actions">
+            <a href="#"><img src="icons8-edit-24.png"></a>
+            <form action="#" method="post" class="delete">
+              <button type="submit" class="delete">
+                <img src="icons8-remove-30.png">
+              </button>
+            </form>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="memo">Payday</td>
+          <td>01/12/23</td>
+          <td class="centered">Income</td>
+          <td class="deposit">$750</td>
+          <td class="rjust">$705.69</td>
+          <td class="actions">
+            <a href="#"><img src="icons8-edit-24.png"></a>
+            <form action="#" method="post" class="delete">
+              <button type="submit" class="delete">
+                <img src="icons8-remove-30.png">
+              </button>
+            </form>
+          </td>
+        </tr>
+      </table>
+    </main>
+    <footer>
+      
+    </footer>
+  </body>
+</html>

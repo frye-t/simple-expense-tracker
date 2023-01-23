@@ -1,0 +1,6 @@
+# Determine user functionality 
+# Finalize db schema
+# Basic wire frame design for various pages
+# Html/css markup 
+ Backend program flow diagram
+ Backend implementation

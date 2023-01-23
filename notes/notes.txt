@@ -1,0 +1,42 @@
+------------------
+Display
+------------------
+Memo, Category, Date, W/D Amount (Append '+' to W), Running Total of Account
+
+------------------
+User Functionality
+------------------
+Log-in/out
+Add an expense
+Remove an expense -|
+Edit an expense   -|Side buttons
+
+Sort by (Memo, Category, Date, W/D Amount (ASC|DESC)) (Clicking on Column Name)
+Search for Expenses (Term + DateRange) (jQuery to Slide Down/Up Search form)
+
+------------------
+An Expense Has
+------------------
+Tied to a User
+Memo
+Transaction Date
+Transaction Type (W/D)
+Amount
+Category ID
+
+------------------
+Categories
+------------------
+Housing
+Transportation
+Food
+Utilities
+Insurance
+Medical
+Savings
+Investment
+Debt
+Personal
+Recreation
+Miscellaneous
+Income
