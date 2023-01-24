@@ -30,7 +30,7 @@ helpers do
       "negative"
     elsif balance < 100
       "sub-100"
-    elsif balance = nil
+    elsif balance == nil
       ""
     end
   end
