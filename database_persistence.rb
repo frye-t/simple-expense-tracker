@@ -72,7 +72,7 @@ class DatabasePersistence
 
     expense_result = query(expenses_sql, uid)
 
-    balance_result = query("SELECT initial_balance FROM user_accounts")
+    balance_result = query("SELECT initial_balance FROM user_accounts WHERE id = uid")
     balance = balance_result[0]['initial_balance'].to_f
 
     expenses = expense_result.map do |tuple|
