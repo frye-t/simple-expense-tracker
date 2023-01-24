@@ -5,7 +5,11 @@ require_relative 'expense'
 
 class DatabasePersistence 
   def initialize(logger)
-    @db = PG.connect(dbname: "expenses")
+    @db = if Sinatra::Base.production?
+        PG.connect(ENV['DATABASE_URL'])
+      else
+        PG.connect(dbname: "expenses")
+      end
     @logger = logger
   end
 
