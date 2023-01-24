@@ -88,7 +88,7 @@ class DatabasePersistence
              expenses.amount, categories.name AS category
         FROM expenses JOIN categories
           ON expenses.category_id = categories.id
-        WHERE expenses.memo ILIKE $1::text
+        WHERE (expenses.memo ILIKE $1::text OR categories.name ILIKE $1::text)
           AND expenses.transaction_date BETWEEN $2 AND $3
           AND user_id = $4
         ORDER BY date, expenses.memo;
