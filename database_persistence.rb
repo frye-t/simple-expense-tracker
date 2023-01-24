@@ -5,8 +5,8 @@ require_relative 'expense'
 
 class DatabasePersistence 
   def initialize(logger)
-    @db = PG.connect("postgres://postgres:RPbpMulhQ3DDqCD@petfrog-expenses-db.internal:5432")
-    #@db = PG.connect(dbname: "petfrog-expenses-db")
+    @db = PG.connect("postgres://postgres:RPbpMulhQ3DDqCD@petfrog-expenses-db.internal:5432/expenses")
+    #@db = PG.connect(dbname: "expenses")
     @logger = logger
   end
 
