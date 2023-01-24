@@ -5,14 +5,56 @@ require_relative 'expense'
 
 class DatabasePersistence 
   def initialize(logger)
-    @db = PG.connect("postgres://postgres:RPbpMulhQ3DDqCD@petfrog-expenses-db.internal:5432/expenses")
+    @db = PG.connect("postgres://postgres:RPbpMulhQ3DDqCD@petfrog-expenses-db.internal:5432")
     #@db = PG.connect(dbname: "expenses")
     @logger = logger
+
+    @db.setup_schema
   end
 
   def query(statement, *params)
     @logger.info("#{statement}: #{params}")
     @db.exec_params(statement, params)
+  end
+
+  def setup_schema
+    result = @db.exec <<~SQL
+      SELECT COUNT(*) FROM information_schema.tables
+      WHERE table_schema = 'public' AND table_name = 'expenses';
+    SQL
+
+    if result[0]["count"] == "0"
+      @db.exec <<~SQL
+        CREATE TABLE user_accounts(
+          id serial PRIMARY KEY,
+          first_name text NOT NULL,
+          initial_balance decimal(6,2) NOT NULL
+        );
+
+        CREATE TABLE user_login_data(
+          user_id integer PRIMARY KEY REFERENCES user_accounts(id),
+          user_name text NOT NULL,
+          password text NOT NULL
+        );
+
+        CREATE TABLE categories(
+          id serial PRIMARY KEY,
+          name text NOT NULL
+        );
+
+        CREATE TYPE transaction_type_enum AS ENUM ('withdrawal', 'deposit');
+
+        CREATE TABLE expenses(
+          id serial PRIMARY KEY,
+          user_id integer NOT NULL REFERENCES user_accounts(id),
+          memo text NOT NULL,
+          transaction_date date NOT NULL,
+          transaction_type transaction_type_enum NOT NULL,
+          amount decimal(6,2) NOT NULL,
+          category_id integer NOT NULL REFERENCES categories(id)
+        );
+      SQL
+    end
   end
 
   def all_expenses(user)
