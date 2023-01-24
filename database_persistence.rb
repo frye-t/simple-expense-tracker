@@ -5,11 +5,8 @@ require_relative 'expense'
 
 class DatabasePersistence 
   def initialize(logger)
-    @db = if Sinatra::Base.production?
-        PG.connect("postgres://postgres:secret123@postgresapp.internal:5432/petfrog-expenses-db")
-      else
-        PG.connect(dbname: "expenses")
-      end
+    @db = PG.connect("postgres://postgres:secret123@postgresapp.internal:5432/petfrog-expenses-db")
+    # @db = PG.connect(dbname: "expenses")
     @logger = logger
   end
 
