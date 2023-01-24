@@ -1,4 +1,4 @@
-# fly.toml file generated for petfrog-expenses on 2023-01-24T15:33:22-05:00
+# fly.toml file generated for petfrog-expenses on 2023-01-24T15:56:31-05:00
 
 app = "petfrog-expenses"
 kill_signal = "SIGINT"
