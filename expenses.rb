@@ -2,6 +2,7 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'sinatra/content_for'
 require 'tilt/erubis'
+require 'date'
 
 require_relative 'database_persistence'
 require_relative 'expense'
@@ -27,6 +28,8 @@ helpers do
       "negative"
     elsif balance < 100
       "sub-100"
+    elsif balance = nil
+      ""
     end
   end
 
@@ -41,8 +44,13 @@ end
 
 get '/expenses' do
   @expenses = @storage.all_expenses(@user_name)
-  str = "" 
-  @expenses.each { |exp| str << exp.memo }
+  if @expenses.size > 0
+    @start_date = @expenses[0].date
+    @end_date = @expenses[-1].date
+  else
+    @start_date = Date.today
+    @end_date = Date.today
+  end
   erb :expenses
 end
 
@@ -131,6 +139,24 @@ post '/delete-expense/:expense_id' do
   @storage.delete_expense(expense_id)
   session[:success] = "#{params[:memo]} deleted."
   redirect '/expenses'
+end
+
+get '/search' do
+  term = params[:term]
+  start_date = params[:start_date]
+  end_date = params[:end_date]
+  @search = true
+
+  @expenses = @storage.search(term, start_date, end_date, @user_name)
+
+  if @expenses.size > 0
+    @start_date = @expenses[0].date
+    @end_date = @expenses[-1].date
+  else
+    @start_date = Date.today
+    @end_date = Date.today
+  end  
+  erb :expenses
 end
 
 not_found do; end

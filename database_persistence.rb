@@ -43,11 +43,34 @@ class DatabasePersistence
     end
   end
 
+  def search(term, start_date, end_date, user)
+    expenses_sql = <<~SQL
+      SELECT expenses.id, expenses.memo,
+             expenses.transaction_date AS date, expenses.transaction_type AS type,
+             expenses.amount, categories.name AS category
+        FROM user_accounts JOIN user_login_data
+          ON user_accounts.id = user_login_data.user_id
+        JOIN expenses
+          ON expenses.user_id = user_login_data.user_id
+        JOIN categories
+          ON expenses.category_id = categories.id
+        WHERE expenses.memo ILIKE $1::text
+          AND expenses.transaction_date BETWEEN $2 AND $3
+        ORDER BY date, expenses.memo;
+    SQL
+
+    pp term
+    pp term.class
+
+    expense_result = query(expenses_sql, "%#{term}%", start_date, end_date)
+    expenses = expense_result.map do |tuple|
+      tuple_to_expense(tuple, nil)
+    end
+  end
+
   def add_expense(expense, user)
     uid = uid_from_user_name(user)
     cat_id = cat_id_from_name(expense.category)
-
-    pp expense
 
     add_expense_sql = <<~SQL
       INSERT INTO expenses (user_id, memo, transaction_date, transaction_type, amount, category_id)
@@ -66,12 +89,12 @@ class DatabasePersistence
       SELECT expenses.id, expenses.memo, expenses.transaction_date AS date,
              expenses.transaction_type AS type, expenses.amount, 
              categories.name AS category
-      FROM expenses JOIN user_login_data
-      ON expenses.user_id = user_login_data.user_id
-      JOIN categories
-      ON expenses.category_id = categories.id
-      WHERE user_login_data.user_name = $1
-      AND expenses.id = $2;
+        FROM expenses JOIN user_login_data
+          ON expenses.user_id = user_login_data.user_id
+        JOIN categories
+          ON expenses.category_id = categories.id
+       WHERE user_login_data.user_name = $1
+         AND expenses.id = $2;
     SQL
 
     result = query(sql, user, expense_id)

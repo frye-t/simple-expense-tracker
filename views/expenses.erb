@@ -2,15 +2,15 @@
   Tyler's Expenses
 <% end %>
 
-<form action="#" method="post" id="search-form">
+<form action="/search" method="get" id="search-form">
   <label for="name">Search for:</label>
-  <input type="text" name="term">
+  <input type="text" name="term" value="<%= params[:term] %>">
 
   <label for="start_date">Between:</label>
-  <input type="date" name="start_date" value="2022-01-01">
+  <input type="date" name="start_date" value="<%= params[:start_date] || @start_date %>">
 
   <label for="end_date">And:</label>
-  <input type="date" name="start_date" value="2023-01-22">
+  <input type="date" name="end_date" value="<%= params[:end_date] || @end_date %>">
 
   <button type="submit" class="search">Search</button>
 </form>
@@ -35,9 +35,11 @@
     <th>
       <a href="#">Amount</a>
     </th>
-    <th>
-      <a href="#">Balance</a>
-    </th>
+    <% if !@search %>
+      <th>
+        <a href="#">Balance</a>
+      </th>
+    <% end %>
     <th class="actions"></th>
   </tr>
 
@@ -47,7 +49,9 @@
     <td><%= expense.date %></td>
     <td class="centered"><%= expense.category %></td>
     <td class="<%= amount_class(expense) %>"><%= expense.amount %></td>
-    <td class="rjust <%= balance_class(expense) %>"><%= expense.balance %></td>
+    <% if !@search %>
+      <td class="rjust <%= balance_class(expense) %>"><%= expense.balance %></td>
+    <% end %>
     <td class="actions">
       <a href="/edit-expense/<%= expense.id %>"><img src="./images/icons8-edit-24.png"></a>
       <form action="/delete-expense/<%= expense.id %>" method="post" class="delete">

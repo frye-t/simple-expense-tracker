@@ -43,13 +43,13 @@ form {
 
 form#add-expense-form {
   text-align: left;
-  width: 27%;
+  width: 28%;
   line-height: 40px;
   border: 1px solid #808080;
   padding: 25px;
 }
 
-form#add-expense-form #term {
+form#add-expense-form #memo {
    margin-left: 22px;
 }
 
