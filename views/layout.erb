@@ -7,17 +7,29 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet"> 
+    <script src="/javascripts/jquery-3.6.3.min.js"></script>
+    <script src="/javascripts/application.js"></script>
   </head>
   <body>
     <header>
       <nav>
         <ul>
-          <li>Signed in as: tfrye42</li>
-          <li><a href="#">Sign Out</a></li>
+          <% if user_signed_in? %>
+            <li>Signed in as: <%= @user_name %></li>
+            <li>
+              <form action="/sign-out" method="post" class="sign-out">
+                <button type="submit" class="sign-out">
+                  Sign-Out
+              </form>
+            </li>
+          <% else %> 
+            <li><a href="/sign-in">Sign-In</a></li>
+            <li><a href="/register">Register</a></li>
+          <% end %>
         </ul>
       </nav>
       <h1><%= yield_content :header_text %></h1>
-      <a href="/expenses" class="home-link">Home</a>
+      <a href="/" class="home-link">Home</a>
     </header>
     <main>
       <% if session[:error] %>

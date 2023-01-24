@@ -1,5 +1,4 @@
 require 'sinatra'
-require 'sinatra/reloader'
 require 'sinatra/content_for'
 require 'tilt/erubis'
 require 'date'
@@ -7,17 +6,20 @@ require 'date'
 require_relative 'database_persistence'
 require_relative 'expense'
 
-# Setup Session if using
 configure do
   enable :sessions
   set :session_secret, 'secret'
   set :erb, :escape_html => true
 end
 
+configure(:development) do
+  require 'sinatra/reloader'
+end
+
 before do
-  @user_name = session[:user_name]
-  @storage = DatabasePersistence.new(logger)
-  session[:user_name] = 'PetFrog'
+  @user_name ||= session[:user_name]
+  @first_name ||= session[:first_name].capitalize if session[:first_name]
+  @storage ||= DatabasePersistence.new(logger)
 end
 
 # View Helpers
@@ -36,13 +38,25 @@ helpers do
   def amount_class(expense)
     expense.type
   end
+
+  def user_signed_in?
+    signed_in?
+  end
+end
+
+def signed_in?
+ return true if @user_name
+ false
 end
 
 get '/' do
-  redirect '/expenses'
+  redirect '/expenses' if signed_in?
+  redirect '/sign-in'
 end
 
 get '/expenses' do
+  redirect '/' if !signed_in?
+
   @expenses = @storage.all_expenses(@user_name)
   if @expenses.size > 0
     @start_date = @expenses[0].date
@@ -54,7 +68,8 @@ get '/expenses' do
   erb :expenses
 end
 
-get '/add-expense' do  
+get '/add-expense' do
+  @date = Date.today
   @categories_list = @storage.categories
   erb :add_expense
 end
@@ -94,16 +109,20 @@ post '/add-expense' do
 end
 
 get '/edit-expense/:expense_id' do
-  expense = @storage.single_expense(params[:expense_id], @user_name)
-  @memo = expense.memo
-  @date = expense.date
-  @amount = expense.amount
-  @category = expense.category
-  @id = expense.id
-
   @categories_list = @storage.categories
+  expense = @storage.single_expense(params[:expense_id], @user_name)
+  if expense
+    @memo = expense.memo
+    @date = expense.date
+    @amount = expense.amount
+    @category = expense.category
+    @id = expense.id
 
-  erb :edit_expense
+    erb :edit_expense
+  else
+    session[:error] = "Expense not found."
+    redirect '/expenses'
+  end
 end
 
 post '/edit-expense/:expense_id' do
@@ -113,19 +132,19 @@ post '/edit-expense/:expense_id' do
   date = params[:date]
   id = params[:expense_id]
 
-  case category
-  when "Income" then 
-    type = "deposit"
-    exp_type = "Income"
-  else 
-    type = "withdrawal"
-    exp_type = "Expense"
-  end
   error = error_for_memo(memo)
   if error
     session[:error] = error
     erb :edit_expense
   else
+    case category
+    when "Income" then 
+      type = "deposit"
+      exp_type = "Income"
+    else 
+      type = "withdrawal"
+      exp_type = "Expense"
+    end
     expense = Expense.new(memo, date, type, amount, category, nil, id)
     @storage.update_expense(expense, @user_name)
 
@@ -157,6 +176,54 @@ get '/search' do
     @end_date = Date.today
   end  
   erb :expenses
+end
+
+get '/register' do
+  erb :register
+end
+
+post '/register' do
+  user = params[:username]
+  pass = params[:password]
+  first_name = params[:first_name]
+  balance = params[:balance]
+
+  user_error = @storage.duplicate_user?(user)
+  if user_error
+    session[:error] = "Must provide a unique username"
+    erb :register
+  else
+    @storage.register_user(user, pass, first_name, balance)
+    session[:success] = "Account registered"
+    redirect '/sign-in'
+  end
+end
+
+get '/sign-in' do
+  erb :sign_in
+end
+
+post '/sign-in' do
+  user = params[:username]
+  pass = params[:password]
+
+  user_data = @storage.sign_in(user, pass)
+  if user_data
+    session[:success] = "Logged in as #{user_data[:user_name]}: #{user_data[:first_name]}"
+    session[:user_name] = user_data[:user_name]
+    session[:first_name] = user_data[:first_name]
+    redirect '/'
+  else
+    session[:error] = "Username or Password is incorrect"
+    erb :sign_in
+  end
+end
+
+post '/sign-out' do
+  session[:success] = "Signed Out."
+  session[:user_name] = nil
+  session[:first_name] = nil
+  redirect '/'
 end
 
 not_found do; end

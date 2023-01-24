@@ -1,0 +1,17 @@
+<% content_for :header_text do %>
+  Sign-In
+<% end %>
+
+<form action="#" method="post" id="sign-in-form">
+  <label for="username">Username:</label>
+  <input type="text" name="username" id="username" value="<%= params[:username] %>" required>
+
+  <br>
+
+  <label for="amount">Password:</label>
+  <input type="password" name="password" id="password" required>
+
+  <br>
+
+  <button type="submit" class="sign-in">Sign In</button>
+</form>

@@ -1,0 +1,19 @@
+<% content_for :header_text do %>
+  Register
+<% end %>
+
+<form action="/register" method="post" id="register-form">
+  <label for="username">Username:</label>
+  <input type="text" name="username" id="username" value="<%= params[:username] %>" required>
+
+  <label for="password">Password:</label>
+  <input type="password" name="password" id="password" required>
+
+  <label for="first_name">First Name:</label>
+  <input type="text" name="first_name" id="first_name" value="<%= params[:first_name] %>" required>
+
+  <label for="balance">Initial Balance:</label>
+  <input type="number" name="balance" id="balance" step="0.01" min="0.01" max="9999.99" value="<%= params[:balance] %>" placeholder="0.00" required>
+
+  <button type="submit" class="register">Register</button>
+</form>

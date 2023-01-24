@@ -1,5 +1,5 @@
 <% content_for :header_text do %>
-  Tyler's Expenses
+  <%= @first_name %>'s Expenses
 <% end %>
 
 <form action="/search" method="get" id="search-form">
@@ -23,22 +23,12 @@
 
 <table>        
   <tr>
-    <th class="memo">
-      <a href="#">Memo</a>
-    </th>
-    <th>
-      <a href="#">Date</a>
-    </th>
-    <th>
-      <a href="#">Category</a>
-    </th>
-    <th>
-      <a href="#">Amount</a>
-    </th>
+    <th class="memo">Memo</th>
+    <th>Date</th>
+    <th>Category</th>
+    <th>Amount</th>
     <% if !@search %>
-      <th>
-        <a href="#">Balance</a>
-      </th>
+      <th>Balance</th>
     <% end %>
     <th class="actions"></th>
   </tr>

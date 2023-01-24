@@ -7,3 +7,8 @@ gem "sinatra-contrib"
 gem "erubis"
 gem "webrick"
 gem "pg"
+gem "bcrypt"
+
+group :production do
+  gem "puma"
+end

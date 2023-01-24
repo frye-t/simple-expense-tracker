@@ -1,4 +1,5 @@
 require 'pg'
+require 'bcrypt'
 
 require_relative 'expense'
 
@@ -6,11 +7,6 @@ class DatabasePersistence
   def initialize(logger)
     @db = PG.connect(dbname: "expenses")
     @logger = logger
-  end
-
-  def verify_connection
-    puts "Connected to:"
-    puts @db
   end
 
   def query(statement, *params)
@@ -23,16 +19,15 @@ class DatabasePersistence
       SELECT expenses.id, expenses.memo,
              expenses.transaction_date AS date, expenses.transaction_type AS type,
              expenses.amount, categories.name AS category
-        FROM user_accounts JOIN user_login_data
-          ON user_accounts.id = user_login_data.user_id
-        JOIN expenses
-          ON expenses.user_id = user_login_data.user_id
-        JOIN categories
+        FROM expenses JOIN categories
           ON expenses.category_id = categories.id
+        WHERE user_id = $1
         ORDER BY date, expenses.memo;
     SQL
 
-    expense_result = query(expenses_sql)
+    uid = uid_from_user_name(user)
+
+    expense_result = query(expenses_sql, uid)
 
     balance_result = query("SELECT initial_balance FROM user_accounts")
     balance = balance_result[0]['initial_balance'].to_f
@@ -44,25 +39,21 @@ class DatabasePersistence
   end
 
   def search(term, start_date, end_date, user)
-    expenses_sql = <<~SQL
+    search_sql = <<~SQL
       SELECT expenses.id, expenses.memo,
              expenses.transaction_date AS date, expenses.transaction_type AS type,
              expenses.amount, categories.name AS category
-        FROM user_accounts JOIN user_login_data
-          ON user_accounts.id = user_login_data.user_id
-        JOIN expenses
-          ON expenses.user_id = user_login_data.user_id
-        JOIN categories
+        FROM expenses JOIN categories
           ON expenses.category_id = categories.id
         WHERE expenses.memo ILIKE $1::text
           AND expenses.transaction_date BETWEEN $2 AND $3
+          AND user_id = $4
         ORDER BY date, expenses.memo;
     SQL
 
-    pp term
-    pp term.class
+    uid = uid_from_user_name(user)
 
-    expense_result = query(expenses_sql, "%#{term}%", start_date, end_date)
+    expense_result = query(search_sql, "%#{term}%", start_date, end_date, uid)
     expenses = expense_result.map do |tuple|
       tuple_to_expense(tuple, nil)
     end
@@ -93,12 +84,14 @@ class DatabasePersistence
           ON expenses.user_id = user_login_data.user_id
         JOIN categories
           ON expenses.category_id = categories.id
-       WHERE user_login_data.user_name = $1
+       WHERE expenses.user_id = $1
          AND expenses.id = $2;
     SQL
 
-    result = query(sql, user, expense_id)
-    tuple_to_expense(result.tuple(0))
+    uid = uid_from_user_name(user)
+
+    result = query(sql, uid, expense_id)
+    result.ntuples > 0 ? tuple_to_expense(result.tuple(0)) : nil
   end
 
   def update_expense(expense, user)
@@ -120,6 +113,57 @@ class DatabasePersistence
     result.map { |tuple| tuple["name"]}
   end
 
+  def register_user(user, pass, first_name, balance)
+    pass = BCrypt::Password.create(pass)
+
+    user_account_sql = <<~SQL
+      INSERT INTO user_accounts (first_name, initial_balance)
+        VALUES ($1, $2)
+        RETURNING id
+    SQL
+
+    result = query(user_account_sql, first_name, balance)
+    uid = result[0]['id']
+
+    login_data_sql = <<~SQL
+      INSERT INTO user_login_data (user_id, user_name, password)
+        VALUES ($1, $2, $3)
+    SQL
+
+    query(login_data_sql, uid, user, pass)
+  end
+
+  def duplicate_user?(user)
+    result = query("SELECT user_name FROM user_login_data")
+
+    result.each do |tuple|
+      if tuple['user_name'].downcase == user.downcase
+        return true
+      end
+    end
+    false
+  end
+
+  def sign_in(user, pass)
+    pwd_sql = "SELECT password FROM user_login_data WHERE user_name ILIKE $1"
+    pwd_result = query(pwd_sql, user)
+    bcrypt_pwd = ""
+    if pwd_result.ntuples == 1
+      hsh_pwd = pwd_result[0]['password']
+      bcrypt_pwd = BCrypt::Password.new(hsh_pwd)
+    end
+
+    return nil unless bcrypt_pwd == pass
+
+    uid = uid_from_user_name(user)
+    user_data_sql = "SELECT first_name FROM user_accounts WHERE id = $1"
+    user_data_result = query(user_data_sql, uid)
+
+    first_name = user_data_result[0]['first_name']
+
+    {user_name: user, first_name: first_name}
+  end
+
   private
 
   def cat_id_from_name(name)
@@ -129,7 +173,7 @@ class DatabasePersistence
   end
 
   def uid_from_user_name(user)
-    uid_sql = "SELECT user_id FROM user_login_data WHERE user_name = $1"
+    uid_sql = "SELECT user_id FROM user_login_data WHERE user_name ILIKE $1"
     uid_result = query(uid_sql, user)
     uid_result[0]['user_id']
   end

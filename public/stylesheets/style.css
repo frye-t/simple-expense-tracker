@@ -61,7 +61,7 @@ form#add-expense-form #transaction-date-input {
   width: 7rem;
 }
 
-form#sign-in-form {
+form#sign-in-form, form#register-form {
   text-align: left;
   width: 15%;
   line-height: 40px;
@@ -75,6 +75,20 @@ form#sign-in-form input {
 
 form#sign-in-form #password {
   margin-left: 4px;
+}
+
+form#register-form label,
+form#register-form input {
+  display: block;
+}
+
+form#register-form {
+  text-align: left;
+}
+
+form#register-form input {
+  width: 80%;
+  float: left;
 }
 
 label {
@@ -122,14 +136,19 @@ input[type=number] {
   margin: 10px 9px;
 }
 
-.sign-in {
+.sign-in, .register{
   position: relative;
   float: right;
   margin: 10px 30px;
 }
 
+.register {
+  margin: 15px 40px;
+}
+
 #add-expense-form::after,
-#sign-in-form::after {
+#sign-in-form::after,
+#register-form::after {
   clear: both;
   content: "";
   display: block;
@@ -210,12 +229,18 @@ td.actions img {
   background-color: #cccccc;
 }
 
-.delete {
+.delete, .sign-out {
   border: none;
   background-color: #dedede;
   cursor: pointer;
   padding: 0;
   margin: 0;
+}
+
+.sign-out {
+  font-family: 'Questrial', sans-serif;
+  font-size: 1rem;
+  display: inline;
 }
 
 .centered {
