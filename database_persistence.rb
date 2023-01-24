@@ -9,7 +9,7 @@ class DatabasePersistence
     #@db = PG.connect(dbname: "expenses")
     @logger = logger
 
-    @db.setup_schema
+    #@db.setup_schema
   end
 
   def query(statement, *params)
